@@ -1,14 +1,11 @@
-use clap::Parser;
-use cryptoki::context::CInitializeArgs;
-use cryptoki::context::Pkcs11;
-use cryptoki::error::Error;
-use cryptoki::mechanism::Mechanism;
-use cryptoki::object::ObjectClass;
-use cryptoki::object::ObjectHandle;
-use cryptoki::object::{Attribute, KeyType};
-use pkcs11_client::cli::cli::Args;
-use pkcs11_client::utility::*;
-use pkcs11_client::KeyPairUtility;
+use cryptoki::{
+    context::{CInitializeArgs, Pkcs11},
+    error::Error,
+    mechanism::Mechanism,
+    object::ObjectHandle,
+};
+use pkcs11_client::{utility::*, KeyPairUtility};
+
 pub type KeyPair = (ObjectHandle, ObjectHandle);
 impl KeyPairGetter for KeyPair {
     fn get_private_key(&self) -> ObjectHandle {
@@ -24,7 +21,8 @@ trait KeyPairGetter {
 }
 fn main() -> Result<(), Error> {
     // let args = Args::parse();
-
+    //TODO: library installation and hosting.
+    //TODO: =see if i can spin up an HSM
     let pkcs11 = Pkcs11::new(LIBRARY_PATH).expect("Expected working path to PKCS11 lib");
     pkcs11.initialize(CInitializeArgs::OsThreads).unwrap();
     let slots = pkcs11.get_all_slots()?;
